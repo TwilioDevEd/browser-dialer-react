@@ -69,3 +69,11 @@ p {
   font-style: italic;
   margin-top: 10px;
 }
+
+#dialer {
+  font-family: Helvetica, sans-serif;
+  margin: 20px auto;
+  padding: 0;
+  width: 240px;
+  text-align: center;
+}

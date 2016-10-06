@@ -1,17 +1,3 @@
-var countries = [
-  { name: 'United States', cc: '1', code: 'us' },
-  { name: 'Great Britain', cc: '44', code: 'gb' },
-  { name: 'Colombia', cc: '57', code: 'co' },
-  { name: 'Ecuador', cc: '593', code: 'ec' },
-  { name: 'Estonia', cc: '372', code: 'ee' },
-  { name: 'Germany', cc: '49', code: 'de' },
-  { name: 'Hong Kong', cc: '852', code: 'hk' },
-  { name: 'Ireland', cc: '353', code: 'ie' },
-  { name: 'Singapore', cc: '65', code: 'sg' },
-  { name: 'Spain', cc: '34', code: 'es' },
-  { name: 'Brazil', cc: '55', code: 'br' },
-];
-
 var DialerApp = React.createClass({
   render: function() {
     return (
@@ -27,7 +13,7 @@ var DialerApp = React.createClass({
 var DialForm = React.createClass({
   render: function() {
     return (
-      <div id="dialform" className="input-group input-group-sm">
+      <div id="dial-form" className="input-group input-group-sm">
         <CountryCodeList/>
         <TelNumber/>
       </div>
@@ -36,13 +22,38 @@ var DialForm = React.createClass({
 });
 
 var CountryCodeList = React.createClass({
+  getInitialState() {
+    return {
+      countryCode: '1'
+    }
+  },
+  handleClick(countryCode) {
+    this.setState({
+      countryCode: countryCode
+    })
+  },
   render: function() {
+    var self = this;
+
+    var countries = [
+      { name: 'United States', cc: '1', code: 'us' },
+      { name: 'Great Britain', cc: '44', code: 'gb' },
+      { name: 'Colombia', cc: '57', code: 'co' },
+      { name: 'Ecuador', cc: '593', code: 'ec' },
+      { name: 'Estonia', cc: '372', code: 'ee' },
+      { name: 'Germany', cc: '49', code: 'de' },
+      { name: 'Hong Kong', cc: '852', code: 'hk' },
+      { name: 'Ireland', cc: '353', code: 'ie' },
+      { name: 'Singapore', cc: '65', code: 'sg' },
+      { name: 'Spain', cc: '34', code: 'es' },
+      { name: 'Brazil', cc: '55', code: 'br' },
+    ];
     var countryOptions = countries.map(function(country) {
       var flagClass = 'flag flag-' + country.code;
 
       return (
         <li>
-          <a href="#">
+          <a href="#" onClick={() => self.handleClick(country.cc)}>
             <div className={ flagClass }></div>
             <span>{ country.name } (+{ country.cc })</span>
           </a>
@@ -53,7 +64,7 @@ var CountryCodeList = React.createClass({
       <div className="input-group-btn">
         <button type="button" className="btn btn-default dropdown-toggle" 
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            +<span className="country-code">1</span>
+            +<span className="country-code">{this.state.countryCode}</span>
             <i className="fa fa-caret-down"></i>
         </button>
         <ul className="dropdown-menu">
@@ -66,10 +77,23 @@ var CountryCodeList = React.createClass({
 });
 
 var TelNumber = React.createClass({
+  getInitialState() {
+    return {
+      currentNumber: '',
+      isValid: false
+    }
+  },
+  handleChange(e) {
+    this.setState({
+      currentNumber: e.target.value,
+      isValid: /^([0-9]|#|\*)+$/.test(e.target.value.replace(/[-()\s]/g,''))
+    })
+  },
   render: function() {
     return (
       <div className="input-group input-group-sm">
-        <input type="tel" className="form-control" placeholder="555-666-7777"/>
+        <input type="tel" value={this.state.currentNumber} onChange={this.handleChange}
+            className="form-control" placeholder="555-666-7777" />
       </div>
     );
   }

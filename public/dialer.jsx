@@ -1,3 +1,35 @@
+var LogBox = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <div className="log">{this.props.text}</div>
+        <p>{this.props.smallText}</p>
+      </div>
+    );
+  }
+});
+
+var CallButton = React.createClass({
+  render: function() {
+    return (
+      <button className={'btn btn-circle btn-success ' + (this.props.onPhone ? 'btn-danger': 'btn-success')}
+          onClick={this.props.handleOnClick} disabled={this.props.disabled}>
+        <i className={'fa fa-fw fa-phone '+ (this.props.onPhone ? 'fa-close': 'fa-phone')}></i>
+      </button>
+    );
+  }
+});
+
+var MuteButton = React.createClass({
+  render: function() {
+    return (
+      <button className="btn btn-circle btn-default" onClick={this.props.handleOnClick}>
+        <i className={'fa fa-fw fa-microphone ' + (this.props.muted ? 'fa-microphone-slash': 'fa-microphone')}></i>
+      </button>
+    );
+  }
+});
+
 var DTMFTone = React.createClass({
   // Handle numeric buttons
   sendDigit(digit) {
@@ -139,7 +171,7 @@ var DialerApp = React.createClass({
   render: function() {
     var self = this;
 
-    var countryOptions = self.state.countries.map(function(country) {
+    var CountryOptions = self.state.countries.map(function(country) {
       var flagClass = 'flag flag-' + country.code;
 
       return (
@@ -152,44 +184,46 @@ var DialerApp = React.createClass({
       );
     });
 
+    var CountrySelectBox = function() {
+      return (
+        <div className="input-group-btn">
+          <button type="button" className="btn btn-default dropdown-toggle" 
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              +<span className="country-code">{self.state.countryCode}</span>
+              <i className="fa fa-caret-down"></i>
+          </button>
+          <ul className="dropdown-menu">
+              {CountryOptions}
+          </ul>
+        </div>
+      );
+    };
+
     return (
       <div id="dialer">
         <div id="dial-form" className="input-group input-group-sm">
           
-          <div className="input-group-btn">
-            <button type="button" className="btn btn-default dropdown-toggle" 
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                +<span className="country-code">{this.state.countryCode}</span>
-                <i className="fa fa-caret-down"></i>
-            </button>
-            <ul className="dropdown-menu">
-                {countryOptions}
-            </ul>
-          </div>
+          <CountrySelectBox/>
 
           <div className="input-group input-group-sm">
             <input type="tel" value={this.state.currentNumber} onChange={this.handleChangeNumber}
                 className="form-control" placeholder="555-666-7777" />
           </div>
+
         </div>
 
         <div className="controls">
-          <button className={'btn btn-circle btn-success ' + (this.state.onPhone ? 'btn-danger': 'btn-success')}
-              onClick={this.handleToggleCall} disabled={!this.state.isValidNumber}>
-            <i className={'fa fa-fw fa-phone '+ (this.state.onPhone ? 'fa-close': 'fa-phone')}></i>
-          </button>
           
-          <button className="btn btn-circle btn-default" onClick={this.handleToggleMute}>
-            <i className={'fa fa-fw fa-microphone ' + (this.state.muted ? 'fa-microphone-slash': 'fa-microphone')}></i>
-          </button>
+          <CallButton handleOnClick={this.handleToggleCall} disabled={!this.state.isValidNumber} onPhone={this.state.onPhone}/>
+
+          { this.state.onPhone ? <MuteButton handleOnClick={this.handleToggleMute} muted={this.state.muted} /> : null }
+
         </div>
 
         { this.state.onPhone ? <DTMFTone/> : null }
 
-        <div>
-          <div className="log">{this.state.log}</div>
-          <p>{this.state.identity}</p>
-        </div>
+        <LogBox text={this.state.log} smallText={this.state.identity}/>
+
       </div>
     );
   }

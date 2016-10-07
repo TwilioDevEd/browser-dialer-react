@@ -1,3 +1,14 @@
+var NumberInputText = React.createClass({
+  render: function() {
+    return (
+      <div className="input-group input-group-sm">
+        <input type="tel" className="form-control" placeholder="555-666-7777"
+            value={this.props.currentNumber} onChange={this.props.handleOnChange}/>
+      </div>
+    );
+  }
+});
+
 var CountrySelectBox = React.createClass({
   render: function() {
     var self = this;
@@ -210,10 +221,7 @@ var DialerApp = React.createClass({
           <CountrySelectBox countries={this.state.countries} countryCode={this.state.countryCode}
               handleOnChange={this.handleChangeCountryCode}/>
 
-          <div className="input-group input-group-sm">
-            <input type="tel" value={this.state.currentNumber} onChange={this.handleChangeNumber}
-                className="form-control" placeholder="555-666-7777" />
-          </div>
+          <NumberInputText currentNumber={this.state.currentNumber} handleOnChange={this.handleChangeNumber} />
 
         </div>
 

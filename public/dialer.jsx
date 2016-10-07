@@ -20,7 +20,7 @@ var CountrySelectBox = React.createClass({
         <li>
           <a href="#" onClick={() => self.props.handleOnChange(country.cc)}>
             <div className={ flagClass }></div>
-            <span>{ country.name } (+{ country.cc })</span>
+            <span> { country.name } (+{ country.cc })</span>
           </a>
         </li>
       );

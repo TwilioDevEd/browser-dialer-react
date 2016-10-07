@@ -1,3 +1,35 @@
+var CountrySelectBox = React.createClass({
+  render: function() {
+    var self = this;
+
+    var CountryOptions = self.props.countries.map(function(country) {
+      var flagClass = 'flag flag-' + country.code;
+
+      return (
+        <li>
+          <a href="#" onClick={() => self.props.handleOnChange(country.cc)}>
+            <div className={ flagClass }></div>
+            <span>{ country.name } (+{ country.cc })</span>
+          </a>
+        </li>
+      );
+    });
+
+    return (
+      <div className="input-group-btn">
+        <button type="button" className="btn btn-default dropdown-toggle" 
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            +<span className="country-code">{self.props.countryCode}</span>
+            <i className="fa fa-caret-down"></i>
+        </button>
+        <ul className="dropdown-menu">
+          {CountryOptions}
+        </ul>
+      </div>
+    );
+  }
+});
+
 var LogBox = React.createClass({
   render: function() {
     return (
@@ -171,39 +203,12 @@ var DialerApp = React.createClass({
   render: function() {
     var self = this;
 
-    var CountryOptions = self.state.countries.map(function(country) {
-      var flagClass = 'flag flag-' + country.code;
-
-      return (
-        <li>
-          <a href="#" onClick={() => self.handleChangeCountryCode(country.cc)}>
-            <div className={ flagClass }></div>
-            <span>{ country.name } (+{ country.cc })</span>
-          </a>
-        </li>
-      );
-    });
-
-    var CountrySelectBox = function() {
-      return (
-        <div className="input-group-btn">
-          <button type="button" className="btn btn-default dropdown-toggle" 
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              +<span className="country-code">{self.state.countryCode}</span>
-              <i className="fa fa-caret-down"></i>
-          </button>
-          <ul className="dropdown-menu">
-              {CountryOptions}
-          </ul>
-        </div>
-      );
-    };
-
     return (
       <div id="dialer">
         <div id="dial-form" className="input-group input-group-sm">
           
-          <CountrySelectBox/>
+          <CountrySelectBox countries={this.state.countries} countryCode={this.state.countryCode}
+              handleOnChange={this.handleChangeCountryCode}/>
 
           <div className="input-group input-group-sm">
             <input type="tel" value={this.state.currentNumber} onChange={this.handleChangeNumber}

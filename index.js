@@ -12,7 +12,7 @@ app.use(urlencoded({ extended: false }));
 
 // Generate a Twilio Client capability token
 app.get('/token', (request, response) => {
-  let capability = new twilio.Capability(
+  let capability = new twilio.jwt.Capability(
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );

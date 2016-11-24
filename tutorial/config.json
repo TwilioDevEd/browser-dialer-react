@@ -1,0 +1,6 @@
+{
+    "title": "Browser Dialer with Twilio and React",
+    "repo": "TwilioDevEd/browser-dialer-react",
+    "description": "Learn to implement a browser dialer application using the Twilio.js library and React",
+    "heroku": false
+}

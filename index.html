@@ -1,0 +1,141 @@
+<!DOCTYPE html><html><head><title>Browser Dialer with Twilio and React</title><style>body, html {
+  height:100%;
+  width:100%;
+  padding:0;
+  margin:0;
+  overflow:hidden;
+  background-color:#ddd;
+}
+.wrapper {
+  height:100%;
+  width:100%;
+}</style><link rel="shortcut icon" href="//twilio.com/bundles/marketing/img/favicons/favicon.ico"><link rel="apple-touch-icon" href="//twilio.com/bundles/marketing/img/favicons/favicon_57.png"><link rel="apple-touch-icon" sizes="72x72" href="//twilio.com/bundles/marketing/img/favicons/favicon_72.png"><link rel="apple-touch-icon" sizes="114x114" href="//twilio.com/bundles/marketing/img/favicons/favicon_114.png"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="viewsaurus.css"></head><body><div class="wrapper"><div id="viewsaurus" data-title="Browser Dialer with Twilio and React"><div class="saurus-panes"><div class="saurus-prose"><div class="saurus-prose-header"><div class="title-outer"><span class="step-title">Browser Dialer with Twilio and React</span></div></div><div class="saurus-nav-buttons"><div class="saurus-nav-button nav-overview"><div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-previous"><div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-next clickable"><div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div></div><div class="saurus-next-title"><span class="next-title-inner"></span></div></div><div class="saurus-progress-bar"></div><div class="saurus-start"><p>Learn to implement a browser dialer application using the Twilio.js library and React</p><a href="#0">Start Tutorial</a></div><div class="saurus-content"><div data-title="What Does This Thing Do?" data-file="index.js" class="step"><h2 id="what-does-this-thing-do-">What Does This Thing Do?</h2>
+<p>This application allows you to make a phone call from your browser using
+<a href="//www.twilio.com/client">Twilio Client</a>.</p>
+<p>It also includes a couple other standard features you would expect a
+browser phone to have:</p>
+<ol>
+<li>Mute and unmute microphone input</li>
+<li>Send DTMF touch tones using the HTML key pad</li>
+</ol>
+<p><img src="//howtodocs.s3.amazonaws.com/browser-dialer.png" alt="Browser Dialer"></p>
+<p>This tutorial highlights the key bits of code that make this application
+work. <a href="//github.com/TwilioDevEd/browser-dialer-vue">Check out the project README on GitHub</a>
+to see how to run the code yourself.</p>
+<p>Let&#39;s get started.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//en.wikipedia.org/wiki/Dual-tone_multi-frequency_signaling">Dual-Tone Multi-Frequency Signaling</a></li>
+</ul>
+</div><div data-title="Create a Twilio Application" data-file="index.js" class="step"><h2 id="create-a-twilio-application">Create a Twilio Application</h2>
+<p>This application requires a TwiML application to make a phone call, in this
+step we&#39;ll show you how to create it.</p>
+<p>To create a TwiML App open you
+<a href="//www.twilio.com/console/phone-numbers/dev-tools/twiml-apps">Console</a> and
+click the button &quot;Create new TwiML App&quot;.</p>
+<p><img src="//howtodocs.s3.amazonaws.com/new-twiml-app.png" alt="New Twiml App"></p>
+<p>Every TwiML application needs a friendly name (we called ours “Browser
+Dialer”) and either a Voice URL or a Messaging URL. Since we want our users
+to make phone calls, we used a URL to our application’s “/voice” route.</p>
+<p><strong>Note:</strong> When running the app locally, you can use a tool like
+<a href="//www.twilio.com/blog/2013/10/test-your-webhooks-locally-with-ngrok.html">ngrok</a>
+to get a publicly accessible URL for your development environment.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/api/rest/applications">REST API: Applications</a></li>
+<li><a href="//support.twilio.com/hc/en-us/articles/223180928-How-do-I-create-a-TwiML-App-">How do I create a TwiML App?</a></li>
+</ul>
+</div><div data-title="Generate a Capability Token" data-file="index.js" data-highlight="13-25" class="step"><h2 id="generate-a-capability-token">Generate a Capability Token</h2>
+<p>Before our users can make any calls in their browsers, we need to create a
+capability token for them.</p>
+<p>Capability tokens are your way to control exactly what your users can and
+can&#39;t do with Twilio Client. In this case, our server will provide all users
+with tokens that allow them to make outbound phone calls.</p>
+<p>We use the <a href="//www.twilio.com/docs/libraries/node">Twilio Node Helper Library</a>
+to generate and configure a capability token with the SID of our Twilio
+Application to allow outgoing calls.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/api/client/capability-tokens">Twilio Client: Capability Tokens</a></li>
+<li><a href="//www.twilio.com/docs/api/client/capability-tokens#allow-outgoing-connections">Capability Tokens: Allow Outgoing Connections</a></li>
+</ul>
+</div><div data-title="Set Up the Twilio Device" data-file="public/dialer.jsx" data-highlight="155-161, 171-173" class="step"><h2 id="set-up-the-twilio-device">Set Up the Twilio Device</h2>
+<p>In our client-side code we start by <a href="//www.twilio.com/docs/api/client/twilio-js#including-js">including the Twilio.js library</a>.</p>
+<p>We then retrieve the capability token from the route <strong>/token</strong> with a POST
+request using jQuery.</p>
+<p>Lastly, we pass our token to <code>Twilio.Device.setup()</code> to finish the setup.</p>
+<p>The <code>Twilio.Device.ready</code> callback is used to notify us when the device is
+ready to make calls.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/api/client/device#setup">Twilio.Device.setup</a></li>
+<li><a href="//www.twilio.com/docs/api/client/device#ready">Twilio.Device.ready</a></li>
+</ul>
+</div><div data-title="Make a Call" data-file="public/dialer.jsx" data-highlight="205-207" class="step"><h2 id="make-a-call">Make a Call</h2>
+<p>Now that Twilio Client is ready, our users can start making phone calls.
+They&#39;ll start by inputting the phone number they wish to call.</p>
+<p>We massage that input before passing the number on to Twilio, adding a <strong>+</strong>
+sign, then a country code, and the actual number. This is called the
+<a href="//en.wikipedia.org/wiki/E.164">E.164</a> format and is required by most
+parts of Twilio&#39;s API.</p>
+<p>We then use <code>Twilio.Device.connect</code> to start the call. Twilio will send a
+request to the URL you specified in your Twilio Application configuration,
+looking for instructions on how to handle the call.</p>
+<p>In this case, we include the phone number the user wishes to dial in our
+<code>connect()</code> call, and we then access it in
+<a href="//github.com/TwilioDevEd/browser-dialer-vue/blob/master/index.js#L27-L35">our server-side code here</a>.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/api/client/device#connect">Twilio.Device.connect</a></li>
+</ul>
+</div><div data-title="Mute and Unmute an Active Call" data-file="public/dialer.jsx" data-highlight="189-195" class="step"><h2 id="mute-and-unmute-an-active-call">Mute and Unmute an Active Call</h2>
+<p>Sometimes you want to mute or unmute the current call, halting input
+from the user&#39;s microphone.</p>
+<p>We can use <code>Twilio.Device.activeConnection()</code> to get the active call,
+and then call its <code>mute()</code> method to mute or unmute the user&#39;s microphone.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/api/client/device#activeconnection">Twilio.Device.activeConnection</a></li>
+<li><a href="//www.twilio.com/docs/api/client/connection#mute">Twilio.Connection.mute</a></li>
+</ul>
+</div><div data-title="Send DTMF Tones" data-file="public/dialer.jsx" data-highlight="77-80" class="step"><h2 id="send-dtmf-tones">Send DTMF Tones</h2>
+<p>If our user calls an automated phone system, they might need to navigate
+a menu system using our phone&#39;s keypad and DTMF tones.</p>
+<p>DTMF stands for &quot;Dual-tone multi-frequency signaling&quot; and are the familiar
+sounds you hear when dialing a phone. DTMF have been standardized so
+they can be understood and decoded by machines.</p>
+<p>To play DTMF tones with the Twilio.js client library we use the
+<code>sendDigits</code> method, passing which digit the user pressed as our sole
+argument.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/api/client/connection#sendDigits">Twilio.Connection.sendDigits</a></li>
+<li><a href="//en.wikipedia.org/wiki/Interactive_voice_response">Interactive Voice Response</a></li>
+</ul>
+</div><div data-title="Hang up the Call" data-file="public/dialer.jsx" data-highlight="210-211" class="step"><h2 id="hang-up-the-call">Hang up the Call</h2>
+<p>Lastly, our users should be able to end a call.</p>
+<p>To achive this we use <code>Twilio.Device.disconnectAll</code>, which terminates the
+current call.</p>
+<hr>
+<p><strong>See also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/api/client/device#disconnect-all">Twilio.Device.disconnectAll</a></li>
+</ul>
+</div><div data-title="Where to Next?" class="step"><h2 id="where-to-next-">Where to Next?</h2>
+<p>That&#39;s it! We crafted an application that allows our users to make
+browser-to-phone calls using Twilio.js.</p>
+<p>If you have any feedback to share with us, we&#39;d love to hear it.
+<a href="mailto:deved-oss@twilio.com">Contact the Twilio Developer Education Team</a>
+to let us know what you think.</p>
+</div>
+<div class="saurus-files" style="display:none;"><textarea class="saurus-file" data-file="index.js" data-mode="javascript">J3VzZSBzdHJpY3QnOwoKcmVxdWlyZSgnZG90ZW52LXNhZmUnKS5sb2FkKCk7CmNvbnN0IGh0dHAgPSByZXF1aXJlKCdodHRwJyk7CmNvbnN0IGV4cHJlc3MgPSByZXF1aXJlKCdleHByZXNzJyk7CmNvbnN0IHsgdXJsZW5jb2RlZCB9ID0gcmVxdWlyZSgnYm9keS1wYXJzZXInKTsKY29uc3QgdHdpbGlvID0gcmVxdWlyZSgndHdpbGlvJyk7CgpsZXQgYXBwID0gZXhwcmVzcygpOwphcHAudXNlKGV4cHJlc3Muc3RhdGljKF9fZGlybmFtZSArICcvcHVibGljJykpOwphcHAudXNlKHVybGVuY29kZWQoeyBleHRlbmRlZDogZmFsc2UgfSkpOwoKLy8gR2VuZXJhdGUgYSBUd2lsaW8gQ2xpZW50IGNhcGFiaWxpdHkgdG9rZW4KYXBwLmdldCgnL3Rva2VuJywgKHJlcXVlc3QsIHJlc3BvbnNlKSA9PiB7CiAgbGV0IGNhcGFiaWxpdHkgPSBuZXcgdHdpbGlvLkNhcGFiaWxpdHkoCiAgICBwcm9jZXNzLmVudi5UV0lMSU9fQUNDT1VOVF9TSUQsCiAgICBwcm9jZXNzLmVudi5UV0lMSU9fQVVUSF9UT0tFTgogICk7CiAgY2FwYWJpbGl0eS5hbGxvd0NsaWVudE91dGdvaW5nKHByb2Nlc3MuZW52LlRXSUxJT19UV0lNTF9BUFBfU0lEKTsKICBsZXQgdG9rZW4gPSBjYXBhYmlsaXR5LmdlbmVyYXRlKCk7CgogIC8vIEluY2x1ZGUgdG9rZW4gaW4gYSBKU09OIHJlc3BvbnNlCiAgcmVzcG9uc2Uuc2VuZCh7CiAgICB0b2tlbjogdG9rZW4KICB9KTsKfSk7CgovLyBDcmVhdGUgVHdpTUwgZm9yIG91dGJvdW5kIGNhbGxzCmFwcC5wb3N0KCcvdm9pY2UnLCAocmVxdWVzdCwgcmVzcG9uc2UpID0+IHsKICBsZXQgdHdpbWwgPSBuZXcgdHdpbGlvLlR3aW1sUmVzcG9uc2UoKTsKICB0d2ltbC5kaWFsKHJlcXVlc3QuYm9keS5udW1iZXIsIHsKICAgIGNhbGxlcklkOiBwcm9jZXNzLmVudi5UV0lMSU9fTlVNQkVSCiAgfSk7CiAgcmVzcG9uc2UudHlwZSgndGV4dC94bWwnKTsKICByZXNwb25zZS5zZW5kKHR3aW1sLnRvU3RyaW5nKCkpOwp9KTsKCmxldCBzZXJ2ZXIgPSBodHRwLmNyZWF0ZVNlcnZlcihhcHApOwpsZXQgcG9ydCA9IHByb2Nlc3MuZW52LlBPUlQgfHwgMzAwMDsKc2VydmVyLmxpc3Rlbihwb3J0LCAoKSA9PiB7CiAgY29uc29sZS5sb2coYEV4cHJlc3MgU2VydmVyIGxpc3RlbmluZyBvbiAqOiR7cG9ydH1gKTsKfSk7Cgptb2R1bGUuZXhwb3J0cyA9IGFwcDsK</textarea>
+<textarea class="saurus-file" data-file="public/dialer.jsx" data-mode="jsx">dmFyIE51bWJlcklucHV0VGV4dCA9IFJlYWN0LmNyZWF0ZUNsYXNzKHsKICByZW5kZXI6IGZ1bmN0aW9uKCkgewogICAgcmV0dXJuICgKICAgICAgPGRpdiBjbGFzc05hbWU9ImlucHV0LWdyb3VwIGlucHV0LWdyb3VwLXNtIj4KICAgICAgICA8aW5wdXQgdHlwZT0idGVsIiBjbGFzc05hbWU9ImZvcm0tY29udHJvbCIgcGxhY2Vob2xkZXI9IjU1NS02NjYtNzc3NyIKICAgICAgICAgICAgdmFsdWU9e3RoaXMucHJvcHMuY3VycmVudE51bWJlcn0gb25DaGFuZ2U9e3RoaXMucHJvcHMuaGFuZGxlT25DaGFuZ2V9Lz4KICAgICAgPC9kaXY+CiAgICApOwogIH0KfSk7Cgp2YXIgQ291bnRyeVNlbGVjdEJveCA9IFJlYWN0LmNyZWF0ZUNsYXNzKHsKICByZW5kZXI6IGZ1bmN0aW9uKCkgewogICAgdmFyIHNlbGYgPSB0aGlzOwoKICAgIHZhciBDb3VudHJ5T3B0aW9ucyA9IHNlbGYucHJvcHMuY291bnRyaWVzLm1hcChmdW5jdGlvbihjb3VudHJ5KSB7CiAgICAgIHZhciBmbGFnQ2xhc3MgPSAnZmxhZyBmbGFnLScgKyBjb3VudHJ5LmNvZGU7CgogICAgICByZXR1cm4gKAogICAgICAgIDxsaT4KICAgICAgICAgIDxhIGhyZWY9IiMiIG9uQ2xpY2s9eygpID0+IHNlbGYucHJvcHMuaGFuZGxlT25DaGFuZ2UoY291bnRyeS5jYyl9PgogICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT17IGZsYWdDbGFzcyB9PjwvZGl2PgogICAgICAgICAgICA8c3Bhbj4geyBjb3VudHJ5Lm5hbWUgfSAoK3sgY291bnRyeS5jYyB9KTwvc3Bhbj4KICAgICAgICAgIDwvYT4KICAgICAgICA8L2xpPgogICAgICApOwogICAgfSk7CgogICAgcmV0dXJuICgKICAgICAgPGRpdiBjbGFzc05hbWU9ImlucHV0LWdyb3VwLWJ0biI+CiAgICAgICAgPGJ1dHRvbiB0eXBlPSJidXR0b24iIGNsYXNzTmFtZT0iYnRuIGJ0bi1kZWZhdWx0IGRyb3Bkb3duLXRvZ2dsZSIKICAgICAgICAgICAgZGF0YS10b2dnbGU9ImRyb3Bkb3duIiBhcmlhLWhhc3BvcHVwPSJ0cnVlIiBhcmlhLWV4cGFuZGVkPSJmYWxzZSI+CiAgICAgICAgICAgICs8c3BhbiBjbGFzc05hbWU9ImNvdW50cnktY29kZSI+e3NlbGYucHJvcHMuY291bnRyeUNvZGV9PC9zcGFuPgogICAgICAgICAgICA8aSBjbGFzc05hbWU9ImZhIGZhLWNhcmV0LWRvd24iPjwvaT4KICAgICAgICA8L2J1dHRvbj4KICAgICAgICA8dWwgY2xhc3NOYW1lPSJkcm9wZG93bi1tZW51Ij4KICAgICAgICAgIHtDb3VudHJ5T3B0aW9uc30KICAgICAgICA8L3VsPgogICAgICA8L2Rpdj4KICAgICk7CiAgfQp9KTsKCnZhciBMb2dCb3ggPSBSZWFjdC5jcmVhdGVDbGFzcyh7CiAgcmVuZGVyOiBmdW5jdGlvbigpIHsKICAgIHJldHVybiAoCiAgICAgIDxkaXY+CiAgICAgICAgPGRpdiBjbGFzc05hbWU9ImxvZyI+e3RoaXMucHJvcHMudGV4dH08L2Rpdj4KICAgICAgICA8cD57dGhpcy5wcm9wcy5zbWFsbFRleHR9PC9wPgogICAgICA8L2Rpdj4KICAgICk7CiAgfQp9KTsKCnZhciBDYWxsQnV0dG9uID0gUmVhY3QuY3JlYXRlQ2xhc3MoewogIHJlbmRlcjogZnVuY3Rpb24oKSB7CiAgICByZXR1cm4gKAogICAgICA8YnV0dG9uIGNsYXNzTmFtZT17J2J0biBidG4tY2lyY2xlIGJ0bi1zdWNjZXNzICcgKyAodGhpcy5wcm9wcy5vblBob25lID8gJ2J0bi1kYW5nZXInOiAnYnRuLXN1Y2Nlc3MnKX0KICAgICAgICAgIG9uQ2xpY2s9e3RoaXMucHJvcHMuaGFuZGxlT25DbGlja30gZGlzYWJsZWQ9e3RoaXMucHJvcHMuZGlzYWJsZWR9PgogICAgICAgIDxpIGNsYXNzTmFtZT17J2ZhIGZhLWZ3IGZhLXBob25lICcrICh0aGlzLnByb3BzLm9uUGhvbmUgPyAnZmEtY2xvc2UnOiAnZmEtcGhvbmUnKX0+PC9pPgogICAgICA8L2J1dHRvbj4KICAgICk7CiAgfQp9KTsKCnZhciBNdXRlQnV0dG9uID0gUmVhY3QuY3JlYXRlQ2xhc3MoewogIHJlbmRlcjogZnVuY3Rpb24oKSB7CiAgICByZXR1cm4gKAogICAgICA8YnV0dG9uIGNsYXNzTmFtZT0iYnRuIGJ0bi1jaXJjbGUgYnRuLWRlZmF1bHQiIG9uQ2xpY2s9e3RoaXMucHJvcHMuaGFuZGxlT25DbGlja30+CiAgICAgICAgPGkgY2xhc3NOYW1lPXsnZmEgZmEtZncgZmEtbWljcm9waG9uZSAnICsgKHRoaXMucHJvcHMubXV0ZWQgPyAnZmEtbWljcm9waG9uZS1zbGFzaCc6ICdmYS1taWNyb3Bob25lJyl9PjwvaT4KICAgICAgPC9idXR0b24+CiAgICApOwogIH0KfSk7Cgp2YXIgRFRNRlRvbmUgPSBSZWFjdC5jcmVhdGVDbGFzcyh7CiAgLy8gSGFuZGxlIG51bWVyaWMgYnV0dG9ucwogIHNlbmREaWdpdChkaWdpdCkgewogICAgVHdpbGlvLkRldmljZS5hY3RpdmVDb25uZWN0aW9uKCkuc2VuZERpZ2l0cyhkaWdpdCk7CiAgfSwKCiAgcmVuZGVyOiBmdW5jdGlvbigpIHsKICAgIHJldHVybiAoCiAgICAgIDxkaXYgY2xhc3NOYW1lPSJrZXlzIj4KICAgICAgICA8ZGl2IGNsYXNzTmFtZT0ia2V5LXJvdyI+CiAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT0iYnRuIGJ0bi1jaXJjbGUgYnRuLWRlZmF1bHQiIG9uQ2xpY2s9eygpID0+IHRoaXMuc2VuZERpZ2l0KCcxJyl9PjE8L2J1dHRvbj4KICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPSJidG4gYnRuLWNpcmNsZSBidG4tZGVmYXVsdCIgb25DbGljaz17KCkgPT4gdGhpcy5zZW5kRGlnaXQoJzInKX0+MgogICAgICAgICAgICA8c3Bhbj5BIEIgQzwvc3Bhbj4KICAgICAgICAgIDwvYnV0dG9uPgogICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9ImJ0biBidG4tY2lyY2xlIGJ0bi1kZWZhdWx0IiBvbkNsaWNrPXsoKSA9PiB0aGlzLnNlbmREaWdpdCgnMycpfT4zCiAgICAgICAgICAgIDxzcGFuPkQgRSBGPC9zcGFuPgogICAgICAgICAgPC9idXR0b24+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzc05hbWU9ImtleS1yb3ciPgogICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9ImJ0biBidG4tY2lyY2xlIGJ0bi1kZWZhdWx0IiBvbkNsaWNrPXsoKSA9PiB0aGlzLnNlbmREaWdpdCgnNCcpfT40CiAgICAgICAgICAgIDxzcGFuPkcgSCBJPC9zcGFuPgogICAgICAgICAgPC9idXR0b24+CiAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT0iYnRuIGJ0bi1jaXJjbGUgYnRuLWRlZmF1bHQiIG9uQ2xpY2s9eygpID0+IHRoaXMuc2VuZERpZ2l0KCc1Jyl9PjUKICAgICAgICAgICAgPHNwYW4+SiBLIEw8L3NwYW4+CiAgICAgICAgICA8L2J1dHRvbj4KICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPSJidG4gYnRuLWNpcmNsZSBidG4tZGVmYXVsdCIgb25DbGljaz17KCkgPT4gdGhpcy5zZW5kRGlnaXQoJzYnKX0+NgogICAgICAgICAgICA8c3Bhbj5NIE4gTzwvc3Bhbj4KICAgICAgICAgIDwvYnV0dG9uPgogICAgICAgIDwvZGl2PgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJrZXktcm93Ij4KICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPSJidG4gYnRuLWNpcmNsZSBidG4tZGVmYXVsdCIgb25DbGljaz17KCkgPT4gdGhpcy5zZW5kRGlnaXQoJzcnKX0+NwogICAgICAgICAgICA8c3Bhbj5QIFEgUiBTPC9zcGFuPgogICAgICAgICAgPC9idXR0b24+CiAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT0iYnRuIGJ0bi1jaXJjbGUgYnRuLWRlZmF1bHQiIG9uQ2xpY2s9eygpID0+IHRoaXMuc2VuZERpZ2l0KCc4Jyl9PjgKICAgICAgICAgICAgPHNwYW4+VCBVIFY8L3NwYW4+CiAgICAgICAgICA8L2J1dHRvbj4KICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPSJidG4gYnRuLWNpcmNsZSBidG4tZGVmYXVsdCIgb25DbGljaz17KCkgPT4gdGhpcy5zZW5kRGlnaXQoJzknKX0+OQogICAgICAgICAgICA8c3Bhbj5XIFggWSBaPC9zcGFuPgogICAgICAgICAgPC9idXR0b24+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzc05hbWU9ImtleS1yb3ciPgogICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9ImJ0biBidG4tY2lyY2xlIGJ0bi1kZWZhdWx0IiBvbkNsaWNrPXsoKSA9PiB0aGlzLnNlbmREaWdpdCgnKicpfT4qPC9idXR0b24+CiAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT0iYnRuIGJ0bi1jaXJjbGUgYnRuLWRlZmF1bHQiIG9uQ2xpY2s9eygpID0+IHRoaXMuc2VuZERpZ2l0KCcwJyl9PjA8L2J1dHRvbj4KICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPSJidG4gYnRuLWNpcmNsZSBidG4tZGVmYXVsdCIgb25DbGljaz17KCkgPT4gdGhpcy5zZW5kRGlnaXQoJyMnKX0+IzwvYnV0dG9uPgogICAgICAgIDwvZGl2PgogICAgICA8L2Rpdj4KICAgICk7CiAgfQp9KTsKCnZhciBEaWFsZXJBcHAgPSBSZWFjdC5jcmVhdGVDbGFzcyh7CiAgZ2V0SW5pdGlhbFN0YXRlKCkgewogICAgcmV0dXJuIHsKICAgICAgbXV0ZWQ6IGZhbHNlLAogICAgICBsb2c6ICdDb25uZWN0aW5nLi4uJywKICAgICAgb25QaG9uZTogZmFsc2UsCiAgICAgIGNvdW50cnlDb2RlOiAnMScsCiAgICAgIGN1cnJlbnROdW1iZXI6ICcnLAogICAgICBpc1ZhbGlkTnVtYmVyOiBmYWxzZSwKICAgICAgY291bnRyaWVzOiBbCiAgICAgICAgeyBuYW1lOiAnVW5pdGVkIFN0YXRlcycsIGNjOiAnMScsIGNvZGU6ICd1cycgfSwKICAgICAgICB7IG5hbWU6ICdHcmVhdCBCcml0YWluJywgY2M6ICc0NCcsIGNvZGU6ICdnYicgfSwKICAgICAgICB7IG5hbWU6ICdDb2xvbWJpYScsIGNjOiAnNTcnLCBjb2RlOiAnY28nIH0sCiAgICAgICAgeyBuYW1lOiAnRWN1YWRvcicsIGNjOiAnNTkzJywgY29kZTogJ2VjJyB9LAogICAgICAgIHsgbmFtZTogJ0VzdG9uaWEnLCBjYzogJzM3MicsIGNvZGU6ICdlZScgfSwKICAgICAgICB7IG5hbWU6ICdHZXJtYW55JywgY2M6ICc0OScsIGNvZGU6ICdkZScgfSwKICAgICAgICB7IG5hbWU6ICdIb25nIEtvbmcnLCBjYzogJzg1MicsIGNvZGU6ICdoaycgfSwKICAgICAgICB7IG5hbWU6ICdJcmVsYW5kJywgY2M6ICczNTMnLCBjb2RlOiAnaWUnIH0sCiAgICAgICAgeyBuYW1lOiAnU2luZ2Fwb3JlJywgY2M6ICc2NScsIGNvZGU6ICdzZycgfSwKICAgICAgICB7IG5hbWU6ICdTcGFpbicsIGNjOiAnMzQnLCBjb2RlOiAnZXMnIH0sCiAgICAgICAgeyBuYW1lOiAnQnJhemlsJywgY2M6ICc1NScsIGNvZGU6ICdicicgfSwKICAgICAgXQogICAgfQogIH0sCgogIC8vIEluaXRpYWxpemUgYWZ0ZXIgY29tcG9uZW50IGNyZWF0aW9uCiAgY29tcG9uZW50RGlkTW91bnQoKSB7CiAgICB2YXIgc2VsZiA9IHRoaXM7CgogICAgLy8gRmV0Y2ggVHdpbGlvIGNhcGFiaWxpdHkgdG9rZW4gZnJvbSBvdXIgTm9kZS5qcyBzZXJ2ZXIKICAgICQuZ2V0SlNPTignL3Rva2VuJykuZG9uZShmdW5jdGlvbihkYXRhKSB7CiAgICAgIFR3aWxpby5EZXZpY2Uuc2V0dXAoZGF0YS50b2tlbik7CiAgICB9KS5mYWlsKGZ1bmN0aW9uKGVycikgewogICAgICBjb25zb2xlLmxvZyhlcnIpOwogICAgICBzZWxmLnNldFN0YXRlKHtsb2c6ICdDb3VsZCBub3QgZmV0Y2ggdG9rZW4sIHNlZSBjb25zb2xlLmxvZyd9KTsKICAgIH0pOwoKICAgIC8vIENvbmZpZ3VyZSBldmVudCBoYW5kbGVycyBmb3IgVHdpbGlvIERldmljZQogICAgVHdpbGlvLkRldmljZS5kaXNjb25uZWN0KGZ1bmN0aW9uKCkgewogICAgICBzZWxmLnNldFN0YXRlKHsKICAgICAgICBvblBob25lOiBmYWxzZSwKICAgICAgICBsb2c6ICdDYWxsIGVuZGVkLicKICAgICAgfSk7CiAgICB9KTsKCiAgICBUd2lsaW8uRGV2aWNlLnJlYWR5KGZ1bmN0aW9uKCkgewogICAgICBzZWxmLmxvZyA9ICdDb25uZWN0ZWQnOwogICAgfSk7CiAgfSwKCiAgLy8gSGFuZGxlIGNvdW50cnkgY29kZSBzZWxlY3Rpb24KICBoYW5kbGVDaGFuZ2VDb3VudHJ5Q29kZShjb3VudHJ5Q29kZSkgewogICAgdGhpcy5zZXRTdGF0ZSh7Y291bnRyeUNvZGU6IGNvdW50cnlDb2RlfSk7CiAgfSwKCiAgLy8gSGFuZGxlIG51bWJlciBpbnB1dAogIGhhbmRsZUNoYW5nZU51bWJlcihlKSB7CiAgICB0aGlzLnNldFN0YXRlKHsKICAgICAgY3VycmVudE51bWJlcjogZS50YXJnZXQudmFsdWUsCiAgICAgIGlzVmFsaWROdW1iZXI6IC9eKFswLTldfCN8XCopKyQvLnRlc3QoZS50YXJnZXQudmFsdWUucmVwbGFjZSgvWy0oKVxzXS9nLCcnKSkKICAgIH0pOwogIH0sCgogIC8vIEhhbmRsZSBtdXRpbmcKICBoYW5kbGVUb2dnbGVNdXRlKCkgewogICAgdmFyIG11dGVkID0gIXRoaXMuc3RhdGUubXV0ZWQ7CgogICAgdGhpcy5zZXRTdGF0ZSh7bXV0ZWQ6IG11dGVkfSk7CiAgICBUd2lsaW8uRGV2aWNlLmFjdGl2ZUNvbm5lY3Rpb24oKS5tdXRlKG11dGVkKTsKICB9LAoKICAvLyBNYWtlIGFuIG91dGJvdW5kIGNhbGwgd2l0aCB0aGUgY3VycmVudCBudW1iZXIsCiAgLy8gb3IgaGFuZyB1cCB0aGUgY3VycmVudCBjYWxsCiAgaGFuZGxlVG9nZ2xlQ2FsbCgpIHsKICAgIGlmICghdGhpcy5zdGF0ZS5vblBob25lKSB7CiAgICAgIHRoaXMuc2V0U3RhdGUoewogICAgICAgIG11dGVkOiBmYWxzZSwKICAgICAgICBvblBob25lOiB0cnVlCiAgICAgIH0pCiAgICAgIC8vIG1ha2Ugb3V0Ym91bmQgY2FsbCB3aXRoIGN1cnJlbnQgbnVtYmVyCiAgICAgIHZhciBuID0gJysnICsgdGhpcy5zdGF0ZS5jb3VudHJ5Q29kZSArIHRoaXMuc3RhdGUuY3VycmVudE51bWJlci5yZXBsYWNlKC9cRC9nLCAnJyk7CiAgICAgIFR3aWxpby5EZXZpY2UuY29ubmVjdCh7IG51bWJlcjogbiB9KTsKICAgICAgdGhpcy5zZXRTdGF0ZSh7bG9nOiAnQ2FsbGluZyAnICsgbn0pCiAgICB9IGVsc2UgewogICAgICAvLyBoYW5nIHVwIGNhbGwgaW4gcHJvZ3Jlc3MKICAgICAgVHdpbGlvLkRldmljZS5kaXNjb25uZWN0QWxsKCk7CiAgICB9CiAgfSwKCiAgcmVuZGVyOiBmdW5jdGlvbigpIHsKICAgIHZhciBzZWxmID0gdGhpczsKCiAgICByZXR1cm4gKAogICAgICA8ZGl2IGlkPSJkaWFsZXIiPgogICAgICAgIDxkaXYgaWQ9ImRpYWwtZm9ybSIgY2xhc3NOYW1lPSJpbnB1dC1ncm91cCBpbnB1dC1ncm91cC1zbSI+CgogICAgICAgICAgPENvdW50cnlTZWxlY3RCb3ggY291bnRyaWVzPXt0aGlzLnN0YXRlLmNvdW50cmllc30gY291bnRyeUNvZGU9e3RoaXMuc3RhdGUuY291bnRyeUNvZGV9CiAgICAgICAgICAgICAgaGFuZGxlT25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlQ291bnRyeUNvZGV9Lz4KCiAgICAgICAgICA8TnVtYmVySW5wdXRUZXh0IGN1cnJlbnROdW1iZXI9e3RoaXMuc3RhdGUuY3VycmVudE51bWJlcn0gaGFuZGxlT25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlTnVtYmVyfSAvPgoKICAgICAgICA8L2Rpdj4KCiAgICAgICAgPGRpdiBjbGFzc05hbWU9ImNvbnRyb2xzIj4KCiAgICAgICAgICA8Q2FsbEJ1dHRvbiBoYW5kbGVPbkNsaWNrPXt0aGlzLmhhbmRsZVRvZ2dsZUNhbGx9IGRpc2FibGVkPXshdGhpcy5zdGF0ZS5pc1ZhbGlkTnVtYmVyfSBvblBob25lPXt0aGlzLnN0YXRlLm9uUGhvbmV9Lz4KCiAgICAgICAgICB7IHRoaXMuc3RhdGUub25QaG9uZSA/IDxNdXRlQnV0dG9uIGhhbmRsZU9uQ2xpY2s9e3RoaXMuaGFuZGxlVG9nZ2xlTXV0ZX0gbXV0ZWQ9e3RoaXMuc3RhdGUubXV0ZWR9IC8+IDogbnVsbCB9CgogICAgICAgIDwvZGl2PgoKICAgICAgICB7IHRoaXMuc3RhdGUub25QaG9uZSA/IDxEVE1GVG9uZS8+IDogbnVsbCB9CgogICAgICAgIDxMb2dCb3ggdGV4dD17dGhpcy5zdGF0ZS5sb2d9Lz4KCiAgICAgIDwvZGl2PgogICAgKTsKICB9Cn0pOwoKUmVhY3RET00ucmVuZGVyKAogIDxEaWFsZXJBcHAvPiwKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZGlhbGVyLWFwcCcpCik7Cg==</textarea>
+</div>
+</div><div class="saurus-overview"><ul></ul></div></div><div class="saurus-code"><div class="file-path"><span class="crumb-container"></span><i class="fa fa-fw fa-folder"></i></div><div class="saurus-editor"></div></div><div class="saurus-explorer"><div class="saurus-file-list"></div><a href="https://github.com/TwilioDevEd/browser-dialer-react" target="_blank" class="explorer-get-code"> <i class="fa fa-lg fa-github-square"> </i>View Code on GitHub</a></div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script><script src="ace/ace.js"></script><script src="ace/theme-monokai.js"></script><script src="viewsaurus.js"></script></body></html>

@@ -155,11 +155,10 @@ var DialerApp = React.createClass({
     // Fetch Twilio capability token from our Node.js server
     $.getJSON('/token').done(function(data) {
       Twilio.Device.setup(data.token);
-      self.setState({log: `Connected`});
     }).fail(function(err) {
       console.log(err);
       self.setState({log: 'Could not fetch token, see console.log'});
-    })
+    });
 
     // Configure event handlers for Twilio Device
     Twilio.Device.disconnect(function() {
@@ -167,6 +166,10 @@ var DialerApp = React.createClass({
         onPhone: false,
         log: 'Call ended.'
       });
+    });
+
+    Twilio.Device.ready(function() {
+      self.log = 'Connected';
     });
   },
 

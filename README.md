@@ -5,6 +5,10 @@
 # Browser Dialer - React
 [![Build Status](https://travis-ci.org/TwilioDevEd/browser-dialer-react.svg?branch=master)](https://travis-ci.org/TwilioDevEd/browser-dialer-react)
 
+Learn to implement a browser dialer application using the Twilio.js library and React.
+
+[Read the full tutorial here!](https://www.twilio.com/docs/tutorials/walkthrough/browser-dialer/node/react)
+
 ### Prerequisites
 
 1. [Node.js](http://nodejs.org/) (version 6 or higher)

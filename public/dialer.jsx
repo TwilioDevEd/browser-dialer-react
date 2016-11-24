@@ -28,7 +28,7 @@ var CountrySelectBox = React.createClass({
 
     return (
       <div className="input-group-btn">
-        <button type="button" className="btn btn-default dropdown-toggle" 
+        <button type="button" className="btn btn-default dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             +<span className="country-code">{self.props.countryCode}</span>
             <i className="fa fa-caret-down"></i>
@@ -127,7 +127,6 @@ var DialerApp = React.createClass({
   getInitialState() {
     return {
       muted: false,
-      identity: '',
       log: 'Connecting...',
       onPhone: false,
       countryCode: '1',
@@ -155,13 +154,11 @@ var DialerApp = React.createClass({
 
     // Fetch Twilio capability token from our Node.js server
     $.getJSON('/token').done(function(data) {
-      self.setState({identity: data.identity});
       Twilio.Device.setup(data.token);
-      self.setState({log: `Connected with generated client name "${data.identity}"`});
     }).fail(function(err) {
       console.log(err);
       self.setState({log: 'Could not fetch token, see console.log'});
-    })
+    });
 
     // Configure event handlers for Twilio Device
     Twilio.Device.disconnect(function() {
@@ -169,6 +166,10 @@ var DialerApp = React.createClass({
         onPhone: false,
         log: 'Call ended.'
       });
+    });
+
+    Twilio.Device.ready(function() {
+      self.log = 'Connected';
     });
   },
 
@@ -217,7 +218,7 @@ var DialerApp = React.createClass({
     return (
       <div id="dialer">
         <div id="dial-form" className="input-group input-group-sm">
-          
+
           <CountrySelectBox countries={this.state.countries} countryCode={this.state.countryCode}
               handleOnChange={this.handleChangeCountryCode}/>
 
@@ -226,7 +227,7 @@ var DialerApp = React.createClass({
         </div>
 
         <div className="controls">
-          
+
           <CallButton handleOnClick={this.handleToggleCall} disabled={!this.state.isValidNumber} onPhone={this.state.onPhone}/>
 
           { this.state.onPhone ? <MuteButton handleOnClick={this.handleToggleMute} muted={this.state.muted} /> : null }
@@ -235,7 +236,7 @@ var DialerApp = React.createClass({
 
         { this.state.onPhone ? <DTMFTone/> : null }
 
-        <LogBox text={this.state.log} smallText={this.state.identity}/>
+        <LogBox text={this.state.log}/>
 
       </div>
     );

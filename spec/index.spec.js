@@ -1,19 +1,19 @@
 'use strict';
 
-var expect = require('chai').expect
-  , supertest = require('supertest')
-  , cheerio = require('cheerio')
-  , app = require('../index.js');
+let expect = require('chai').expect;
+let supertest = require('supertest');
+let cheerio = require('cheerio');
+let app = require('../index.js');
 
-describe('voice route', function () {
-  describe('POST /voice/', function () {
-    it('responds with twiml', function (done) {
-      var testApp = supertest(app);
+describe('voice route', function() {
+  describe('POST /voice/', function() {
+    it('responds with twiml', function(done) {
+      let testApp = supertest(app);
       testApp
         .post('/voice/')
         .expect(200)
-        .end(function (err, res) {
-          var $ = cheerio.load(res.text);
+        .end(function(err, res) {
+          let $ = cheerio.load(res.text);
           expect($('dial').length).to.equal(1);
           expect($('dial').attr().callerid).to.equal('my-twilio-number');
           done();
@@ -22,10 +22,10 @@ describe('voice route', function () {
   });
 });
 
-describe('index route', function () {
-  describe('GET /', function () {
-    it('responds with 200', function (done) {
-      var testApp = supertest(app);
+describe('index route', function() {
+  describe('GET /', function() {
+    it('responds with 200', function(done) {
+      let testApp = supertest(app);
       testApp
         .get('/')
         .expect(200, done);
@@ -33,10 +33,10 @@ describe('index route', function () {
   });
 });
 
-describe('token route', function () {
-  describe('GET /token', function () {
-    it('responds with token', function (done) {
-      var testApp = supertest(app);
+describe('token route', function() {
+  describe('GET /token', function() {
+    it('responds with token', function(done) {
+      let testApp = supertest(app);
       testApp
         .get('/token')
         .expect(200)

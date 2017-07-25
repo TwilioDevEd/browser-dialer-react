@@ -20,7 +20,7 @@ bluemix login
 TWILIO_TWIML_APP_SID
 TWILIO_NUMBER
 ```
-10. Visit <URL of Bluemix App>
+10. Visit the `URL of Bluemix App`
 11. Call a number you control from the app
 12. Talk to yourself!
 

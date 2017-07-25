@@ -1,12 +1,27 @@
 'use strict';
 
-require('dotenv-safe').load();
+require('dotenv').load();
 const http = require('http');
 const express = require('express');
 const {urlencoded} = require('body-parser');
 const twilio = require('twilio');
 const ClientCapability = twilio.jwt.ClientCapability;
 const VoiceResponse = twilio.twiml.VoiceResponse;
+
+// Retreive Twilio Credentials
+if (process.env.VCAP_SERVICES) {
+    var env = JSON.parse(process.env.VCAP_SERVICES);
+    var local_creds = env['user-provided'][0].credentials;
+    var accountSid = local_creds.accountSID;
+    var authToken = local_creds.authToken;
+
+} else {
+    var accountSid = process.env.TWILIO_ACCOUNT_SID;
+    var authToken = process.env.TWILIO_AUTH_TOKEN;
+}
+var twilioAppSid = process.env.TWILIO_TWIML_APP_SID;
+var twilioPhoneNumber = process.env.TWILIO_NUMBER;
+let port = process.env.PORT || 3000;
 
 let app = express();
 app.use(express.static(__dirname + '/public'));
@@ -15,13 +30,13 @@ app.use(urlencoded({extended: false}));
 // Generate a Twilio Client capability token
 app.get('/token', (request, response) => {
   const capability = new ClientCapability({
-    accountSid: process.env.TWILIO_ACCOUNT_SID,
-    authToken: process.env.TWILIO_AUTH_TOKEN,
+    accountSid: accountSid,
+    authToken: authToken,
   });
 
   capability.addScope(
     new ClientCapability.OutgoingClientScope({
-      applicationSid: process.env.TWILIO_TWIML_APP_SID})
+      applicationSid: twilioAppSid})
   );
 
   const token = capability.toJwt();
@@ -36,14 +51,13 @@ app.get('/token', (request, response) => {
 app.post('/voice', (request, response) => {
   let voiceResponse = new VoiceResponse();
   voiceResponse.dial({
-    callerId: process.env.TWILIO_NUMBER,
+    callerId: twilioPhoneNumber,
   }, request.body.number);
   response.type('text/xml');
   response.send(voiceResponse.toString());
 });
 
 let server = http.createServer(app);
-let port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Express Server listening on *:${port}`);
 });

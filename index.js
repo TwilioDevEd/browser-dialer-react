@@ -12,15 +12,17 @@ const VoiceResponse = twilio.twiml.VoiceResponse;
 if (process.env.VCAP_SERVICES) {
     var env = JSON.parse(process.env.VCAP_SERVICES);
     var local_creds = env['user-provided'][0].credentials;
-    var accountSid = local_creds.accountSID;
-    var authToken = local_creds.authToken;
-
+    var accountSid = local_creds.twilio_account_sid;
+    var authToken = local_creds.twilio_auth_token;
+    var twilioAppSid = local_creds.twilio_twiml_app_sid;
+    var twilioPhoneNumber = local_creds.twilio_number;
 } else {
     var accountSid = process.env.TWILIO_ACCOUNT_SID;
     var authToken = process.env.TWILIO_AUTH_TOKEN;
+    var twilioAppSid = process.env.TWILIO_TWIML_APP_SID;
+    var twilioPhoneNumber = process.env.TWILIO_NUMBER;
 }
-var twilioAppSid = process.env.TWILIO_TWIML_APP_SID;
-var twilioPhoneNumber = process.env.TWILIO_NUMBER;
+
 let port = process.env.PORT || 3000;
 
 let app = express();

@@ -10,17 +10,17 @@ const VoiceResponse = twilio.twiml.VoiceResponse;
 
 // Retreive Twilio Credentials
 if (process.env.VCAP_SERVICES) {
-    var env = JSON.parse(process.env.VCAP_SERVICES);
-    var local_creds = env['user-provided'][0].credentials;
-    var accountSid = local_creds.twilio_account_sid;
-    var authToken = local_creds.twilio_auth_token;
-    var twilioAppSid = local_creds.twilio_twiml_app_sid;
-    var twilioPhoneNumber = local_creds.twilio_number;
+    let env = JSON.parse(process.env.VCAP_SERVICES);
+    let localCreds = env['user-provided'][0].credentials;
+    let accountSid = localCreds.twilio_account_sid;
+    let authToken = localCreds.twilio_auth_token;
+    let twilioAppSid = localCreds.twilio_twiml_app_sid;
+    let twilioPhoneNumber = localCreds.twilio_number;
 } else {
-    var accountSid = process.env.TWILIO_ACCOUNT_SID;
-    var authToken = process.env.TWILIO_AUTH_TOKEN;
-    var twilioAppSid = process.env.TWILIO_TWIML_APP_SID;
-    var twilioPhoneNumber = process.env.TWILIO_NUMBER;
+    let accountSid = process.env.TWILIO_ACCOUNT_SID;
+    let authToken = process.env.TWILIO_AUTH_TOKEN;
+    let twilioAppSid = process.env.TWILIO_TWIML_APP_SID;
+    let twilioPhoneNumber = process.env.TWILIO_NUMBER;
 }
 
 let port = process.env.PORT || 3000;

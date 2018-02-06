@@ -63,9 +63,9 @@ Learn to implement a browser dialer application using the Twilio.js library and 
    http://<your-ngrok-subdomain>/voice
    ```
 
-### Development on IBM Bluemix
+### Development on IBM Cloud
 
-See [this Readme](./BLUEMIX.md).
+See [this Readme](./IBMCLOUD.md).
 
 ## Meta
 
